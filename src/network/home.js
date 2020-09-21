@@ -2,7 +2,7 @@ import {request} from './request.js'
 
 
 
-export function gethomeMultiData(){
+export function getHomeMultiData(){
     return request({
         url:'/home/multidata'
     })
