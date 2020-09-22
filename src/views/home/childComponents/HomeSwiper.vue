@@ -14,6 +14,7 @@
 // 导入Swiper，SwiperItem组件
 import {Swiper,SwiperItem} from 'components/common/swiper/index.js'
 export default {
+  name:'HomeSwiper',
     props:{
         banners:{
             type:Array,
