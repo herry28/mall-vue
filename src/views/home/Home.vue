@@ -7,7 +7,7 @@
     :probe-type="3"
     :pull-up-load="true"
     @pullingUp="loadMore"
-     @scroll="contentScroll">
+    @scroll="contentScroll">
       <!-- 轮播图区域 -->
     <home-swiper :banners='banners'></home-swiper>
     <!-- 推荐区域 -->
@@ -106,16 +106,24 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
     created(){
       // 调用获取首页轮播图和推荐数据的方法
       this.getHomeMultiData()
-      // 调用 获取首页商品数据
+      // 调用 获取首页商品分类数据
       this.getHomeGoods('pop')
       this.getHomeGoods('new')
       this.getHomeGoods('sell')
      
     },
+    mounted(){
+       // 监听图片加载完成
+      this.$bus.$on('itemImgLoad',()=>{
+        this.$refs.scroll.refresh()
+        console.log(11111)
+      })
+    },
     methods:{
       /**
        * 事件监听相关的方法
        */
+      // 监听tabControl的点击事件，切换tab
       tabClick(i){
         switch(i){
           case 0:
@@ -131,19 +139,18 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
         }
       },
 
-    // 回到顶部
+    // 监听回到顶部按钮点击事件，回到顶部
        backTopClick(){
          this.$refs.scroll.scrollTo(0,0)
        },
-      //  滚动事件处理函数
+      //  监听页面滚动事件，回到顶部按钮的显示与隐藏
        contentScroll(position){
         //  console.log(position)
          this.isShowBackTop = (-position.y) > 1000 
         },
-        // 上拉加载更多
+        // 监听上拉事件，上拉加载更多
         loadMore(){
           this.getHomeGoods(this.currentType)
-          this.$refs.scroll.scroll.refresh()
         },
 
 
@@ -168,6 +175,7 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
          this.goods[type].list.push(...res.data.list)
          this.goods[type].page+=1
 
+        // 调用此函数才可以下拉加载更多
          this.$refs.scroll.finishPullUp()
         
        },
