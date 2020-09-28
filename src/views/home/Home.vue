@@ -2,6 +2,13 @@
   <div id="home">
     <!-- 导航栏 -->
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
+     <!-- tab-control区域 -->
+    <tab-control 
+    @tabClick='tabClick'
+    v-show="isTabControlFixed"
+    ref="tabControl1"
+    :titles="['流行','新款','精选']" 
+    class="tab-control"></tab-control>
     <!-- 滚动区域开始 -->
     <scroll class="content" ref="scroll" 
     :probe-type="3"
@@ -9,7 +16,9 @@
     @pullingUp="loadMore"
     @scroll="contentScroll">
       <!-- 轮播图区域 -->
-    <home-swiper :banners='banners'></home-swiper>
+    <home-swiper 
+    @swiperImgLoad='swiperImgLoad'
+    :banners='banners'></home-swiper>
     <!-- 推荐区域 -->
     <home-recommend :recommends="recommends"></home-recommend>
     <!-- homefeature区域 -->
@@ -17,6 +26,7 @@
     <!-- tab-control区域 -->
     <tab-control 
     @tabClick='tabClick'
+    ref="tabControl2"
     :titles="['流行','新款','精选']" 
     class="tab-control"></tab-control>
     <!-- 商品展示区域 -->
@@ -65,6 +75,8 @@ import HomeFeature from './childComponents/HomeFeature.vue'
 
 // 导入请求首页数据的方法
 import {getHomeMultiData,getHomeGoods} from 'network/home.js'
+// 导入防抖函数
+import {debounce} from '../../common/utils.js'
 
 	export default {
     name:'Home',
@@ -94,7 +106,12 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
         // 当前展示的商品种类
         currentType:'pop',
         // 是否显示返回按钮
-        isShowBackTop:false
+        isShowBackTop:false,
+        // tabControl的offsetTop的值
+        tabControlOffSetTop:0,
+        //tabControl是否吸顶
+        isTabControlFixed:false,
+
 
       }
     },
@@ -114,9 +131,9 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
     },
     mounted(){
        // 监听图片加载完成
+        const refresh = debounce(this.$refs.scroll.refresh,200) //将频繁调用的函数用debounce包裹起来
       this.$bus.$on('itemImgLoad',()=>{
-        this.$refs.scroll.refresh()
-        console.log(11111)
+        refresh()
       })
     },
     methods:{
@@ -134,9 +151,10 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
             break
           case 2:
             this.currentType='sell'
-            break
-            
+            break      
         }
+        this.$refs.tabControl1.currentIndex=i
+        this.$refs.tabControl2.currentIndex=i
       },
 
     // 监听回到顶部按钮点击事件，回到顶部
@@ -145,12 +163,21 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
        },
       //  监听页面滚动事件，回到顶部按钮的显示与隐藏
        contentScroll(position){
-        //  console.log(position)
+        // 1. backTop是否显示
          this.isShowBackTop = (-position.y) > 1000 
+        // 2. tabControl是否吸顶（position：fixed）
+        this.isTabControlFixed=(-position.y)>this.tabControlOffSetTop
+
         },
         // 监听上拉事件，上拉加载更多
         loadMore(){
           this.getHomeGoods(this.currentType)
+        },
+        // 监听轮播图图片加载完成
+        swiperImgLoad(){
+           // 获取tabControl的offsetTop的值；$el：获取组件中的元素
+          console.log(this.$refs.tabControl2.$el.offsetTop)
+          this.tabControlOffSetTop=this.$refs.tabControl2.$el.offsetTop
         },
 
 
@@ -175,7 +202,7 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
          this.goods[type].list.push(...res.data.list)
          this.goods[type].page+=1
 
-        // 调用此函数才可以下拉加载更多
+        // 完成上拉加载更多
          this.$refs.scroll.finishPullUp()
         
        },
@@ -188,7 +215,7 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
 
 <style scoped>
   #home{
-  padding-top: 44px;
+  /* padding-top: 44px; */
   height: 100vh;
   position: relative;
 }
@@ -196,17 +223,22 @@ import {getHomeMultiData,getHomeGoods} from 'network/home.js'
     background-color: var(--color-tint);
     color:#fff;
 
-    position: fixed;
+
+    /* position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 9;
+    z-index: 9; */
   }
   .tab-control{
+    position: relative;
+    z-index: 9;
+  }
+  /* .tab-control{
     position: sticky;
     top: 44px;
     z-index: 9;
-  }
+  } */
   /* 滚动区域的高度  方法一*/
   .content{
     overflow: hidden;

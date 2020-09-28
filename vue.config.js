@@ -23,6 +23,7 @@ module.exports = {
         'assets': '@/assets',
         'network': '@/network',
         'views': '@/views',
+        'common':'@/common',
       }
     }
   },
