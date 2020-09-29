@@ -111,6 +111,8 @@ import {debounce} from '../../common/utils.js'
         tabControlOffSetTop:0,
         //tabControl是否吸顶
         isTabControlFixed:false,
+        // 离开时home的位置
+        saveY:0,
 
 
       }
@@ -135,6 +137,15 @@ import {debounce} from '../../common/utils.js'
       this.$bus.$on('itemImgLoad',()=>{
         refresh()
       })
+    },
+    // 当进入home组件时调用，将离开时的位置重新赋值
+    activated(){
+      this.$refs.scroll.scrollTo(0,this.saveY,0)
+      this.$refs.scroll.refresh()
+    },
+    // 当离开home组件时调用，记录离开时的位置
+    deactivated(){
+      this.saveY=this.$refs.scroll.getSaveY()
     },
     methods:{
       /**
@@ -176,7 +187,7 @@ import {debounce} from '../../common/utils.js'
         // 监听轮播图图片加载完成
         swiperImgLoad(){
            // 获取tabControl的offsetTop的值；$el：获取组件中的元素
-          console.log(this.$refs.tabControl2.$el.offsetTop)
+          // console.log(this.$refs.tabControl2.$el.offsetTop)
           this.tabControlOffSetTop=this.$refs.tabControl2.$el.offsetTop
         },
 
@@ -187,7 +198,7 @@ import {debounce} from '../../common/utils.js'
       // 请求首页轮播图和推荐数据
      async getHomeMultiData(){
          const {data:res}=await getHomeMultiData()
-         // console.log(res)
+        //  console.log(res)
           this.banners=res.data.banner.list
           this.recommends=res.data.recommend.list
           // console.log(this.banners)

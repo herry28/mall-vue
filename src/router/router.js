@@ -37,8 +37,9 @@ const routes=[
         component: Profile
       },
       {
-        path: '/detail',
-        component: Detail
+        path: '/detail/:iid',
+        component: Detail,
+        props:true
       }
 ]
 const router=new VueRouter({
