@@ -45,7 +45,7 @@ div>a>img
   - 可以将refresh函数传入到debounce函数中，生成一个新的函数
   - 之后在调用非常频繁时，使用新的函数（并不会频繁调用，因为如果下次来的很快，会把上次取消掉）
   - 
-  # 如何将GoodsListItem.vue中的实践传入到Home.vue中？
+  # 如何将GoodsListItem.vue中的事件传入到Home.vue中？
   - bus事件总线
   - Vue.prototype.$bus=new Vue()
   - this.$bus.$emit('事件名称'，参数)
@@ -69,9 +69,15 @@ div>a>img
      - 当用户滚动到一定位置时，让上面的tabcontrol组件对象显示出来，否则隐藏
 
 
-# home保持原来的状态
+# home页保持原来的状态
 1. home不要随意销毁：keep-alive
 2. home中的内容保持原来的位置：
    - 离开时，保存一个位置信息
    - 进来时，将位置设置为原来保存的位置即可
      - 回来时最好进行一次refresh()****
+  
+
+
+
+
+

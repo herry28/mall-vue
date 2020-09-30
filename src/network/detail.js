@@ -11,6 +11,12 @@ export function getDetail(iid){
     })
 }
 
+export function getRecommend(){
+    return request({
+        url:'/recommend'
+    })
+}
+
 // 将商品基本信息封装到Goods类中
 export class Goods{
     constructor(itemInfo,columns,services){
@@ -34,5 +40,15 @@ export class Shop{
         this.sells=shopInfo.cSells
         this.score=shopInfo.score
         this.goodsCount=shopInfo.cGoods
+    }
+}
+
+// 将商品参数信息封装到GoodsParams类中
+export class GoodsParams{
+    constructor(info,rule){
+        // 有些商品有，有些没有
+        this.image=info.images?info.images[0]:''
+        this.infos=info.set
+        this.sizes=rule.tables
     }
 }

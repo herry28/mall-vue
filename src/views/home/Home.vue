@@ -77,9 +77,12 @@ import HomeFeature from './childComponents/HomeFeature.vue'
 import {getHomeMultiData,getHomeGoods} from 'network/home.js'
 // 导入防抖函数
 import {debounce} from '../../common/utils.js'
+// 导入mixins对象
+import {itemListenerMixins} from '../../common/mixins.js'
 
 	export default {
     name:'Home',
+    mixins:[itemListenerMixins],
     components:{
       NavBar,
       Scroll,
@@ -145,7 +148,10 @@ import {debounce} from '../../common/utils.js'
     },
     // 当离开home组件时调用，记录离开时的位置
     deactivated(){
+      // 1.获取y值
       this.saveY=this.$refs.scroll.getSaveY()
+      // 2.取消全局事件的监听
+      this.$bus.$off('itemImgLoad',this.itemImgListener)
     },
     methods:{
       /**
