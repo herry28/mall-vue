@@ -1,9 +1,12 @@
 <template>
   <div id="detail">
    <!-- 导航栏 -->
-   <detail-nav-bar class="detail-nav-bar" />
+   <detail-nav-bar ref='nav' class="detail-nav-bar" @titleClick='titleClick' />
    <!-- 滚动区域 -->
-  <scroll class="content" ref='scroll'>
+  <scroll class="content" 
+  ref='scroll'
+  :probe-type="3" 
+  @scroll="detailScroll">
     <!-- 轮播图 -->
     <detail-swiper :topImages="topImages"></detail-swiper>
     <!-- 商品基本信息 -->
@@ -13,13 +16,21 @@
     <!-- 商品详情信息 -->
     <detail-goods-info :detail-info="detailInfo" @imgLoad="imgLoad"></detail-goods-info>
     <!-- 商品参数信息 -->
-    <detail-goods-params :goods-params="goodsParams"></detail-goods-params>
+    <detail-goods-params ref="params" :goods-params="goodsParams"></detail-goods-params>
     <!-- 商品评论信息 -->
-    <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
+    <detail-comment-info ref='comment' :comment-info="commentInfo"></detail-comment-info>
     <!-- 推荐商品信息 -->
-    <goods-list :goods="recommends"></goods-list>
+    <goods-list ref="recommend" :goods="recommends"></goods-list>
 
   </scroll>
+  <!-- 底部导航栏 -->
+  <detail-bottom-bar></detail-bottom-bar>
+  <!-- 回到顶部按钮 -->
+  <back-top 
+    @click.native="backTopClick" 
+    v-show="isShowBackTop"
+    ></back-top>
+
   
   </div>
 </template>
@@ -32,6 +43,7 @@ import DetailShopInfo from './childComponents/DetailShopInfo.vue'
 import DetailGoodsInfo from './childComponents/DetailGoodsInfo.vue'
 import DetailGoodsParams from './childComponents/DetailGoodsParams.vue'
 import DetailCommentInfo from './childComponents/DetailCommentInfo.vue'
+import DetailBottomBar from './childComponents/DetailBottomBar.vue'
 
 
 import Scroll from 'components/common/scroll/Scroll.vue'
@@ -40,12 +52,12 @@ import GoodsList from 'components/content/goods/GoodsList'
 import {getDetail,getRecommend,Goods,Shop,GoodsParams} from 'network/detail.js'
 
 // 导入mixins对象
-import {itemListenerMixins} from '../../common/mixins.js'
+import {itemListenerMixins,backTopMixins} from '../../common/mixins.js'
 
 
 	export default {
     name:'Detail',
-    mixins:[itemListenerMixins],
+    mixins:[itemListenerMixins,backTopMixins],
     components:{
       DetailNavBar,
       DetailSwiper,
@@ -54,6 +66,7 @@ import {itemListenerMixins} from '../../common/mixins.js'
       DetailGoodsInfo,
       DetailGoodsParams,
       DetailCommentInfo,
+      DetailBottomBar,
       Scroll,
       GoodsList
     },
@@ -72,7 +85,11 @@ import {itemListenerMixins} from '../../common/mixins.js'
         // 评论信息
         commentInfo:{},
         // 推荐信息
-        recommends:[]
+        recommends:[],
+        // 标题对应区域的y值
+        themeTopYs:[],
+        currentIndex:0
+
       }
     },
     props:{
@@ -126,8 +143,41 @@ import {itemListenerMixins} from '../../common/mixins.js'
       /**
  * 事件监听
  */
+// 详情页图片加载完成
     imgLoad(){
       this.$refs.scroll.refresh()
+      // 当图片加载完时获取主题区域的offsetTop
+      this.themeTopYs=[]
+      this.themeTopYs.push(0)
+      this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+      this.themeTopYs.push(Number.MAX_VALUE)
+      // console.log(this.themeTopYs)
+      },
+      // 监听导航栏的点击事件
+      titleClick(index){
+        // console.log(index)
+        // 当点击标题时，滚动到对应的区域
+        this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],100)
+      },
+      // 监听scroll滚动
+      detailScroll(position){
+        // 1.获取y值
+        const positionY=-position.y
+        // console.log(positionY)
+        // 2.positionY和主题区域的y值进行比较
+        let length=this.themeTopYs.length
+        for(let i=0;i<length-1;i++){
+          if(this.currentIndex!==i && (positionY>=this.themeTopYs[i] && positionY<this.themeTopYs[i+1])){
+            this.currentIndex=i
+            this.$refs.nav.currentIndex=this.currentIndex
+          }
+        }
+        // 3.是否显示回到底部
+        this.isShowBackTop=-position.y>1000
+
+
       }
 	  }
   }

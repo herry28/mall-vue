@@ -42,6 +42,7 @@ export default {
         //点击标题，切换样式    
        titleClick(index){
            this.currentIndex=index
+           this.$emit('titleClick',index)
        },
         //返回首页    
        backClick(){

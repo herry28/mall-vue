@@ -170,6 +170,7 @@ import {itemListenerMixins} from '../../common/mixins.js'
             this.currentType='sell'
             break      
         }
+        // 让2个tabControl的currentIndex保持一致
         this.$refs.tabControl1.currentIndex=i
         this.$refs.tabControl2.currentIndex=i
       },
