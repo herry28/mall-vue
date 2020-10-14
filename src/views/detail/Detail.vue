@@ -24,7 +24,7 @@
 
   </scroll>
   <!-- 底部导航栏 -->
-  <detail-bottom-bar></detail-bottom-bar>
+  <detail-bottom-bar @addToCart='addToCart'></detail-bottom-bar>
   <!-- 回到顶部按钮 -->
   <back-top 
     @click.native="backTopClick" 
@@ -178,6 +178,18 @@ import {itemListenerMixins,backTopMixins} from '../../common/mixins.js'
         this.isShowBackTop=-position.y>1000
 
 
+      },
+      // 点击添加到购物车
+      addToCart(){
+        // 1.获取购物车页面需要展示的信息
+        const product={}
+        product.image=this.topImages[0]
+        product.title=this.goods.title
+        product.desc=this.goods.desc
+        product.price=this.realPrice
+        product.iid=this.iid
+        // 2.添加到购物车
+        this.$store.dispatch('addCart',product)
       }
 	  }
   }
