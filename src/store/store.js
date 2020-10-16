@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import mutations from './mutations.js'
 import actions from './actions.js'
+import getters from './getters.js'
 
 // 1.安装vuex
 Vue.use(Vuex)
@@ -13,7 +14,8 @@ const state={
 const store=new Vuex.Store({
     state,
     mutations,
-    actions
+    actions,
+    getters
 })
 // 3.导出store对象，然后挂载到vue中
 export default store

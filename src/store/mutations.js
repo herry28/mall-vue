@@ -8,6 +8,7 @@ export default{
   },
 //   若商品不存在，将其添加到购物车
     [ADD_TO_CART](state,payload){
+        payload.checked=true
         state.cartList.push(payload)
     }
 }

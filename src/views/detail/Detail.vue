@@ -186,7 +186,7 @@ import {itemListenerMixins,backTopMixins} from '../../common/mixins.js'
         product.image=this.topImages[0]
         product.title=this.goods.title
         product.desc=this.goods.desc
-        product.price=this.realPrice
+        product.price=this.newPrice
         product.iid=this.iid
         // 2.添加到购物车
         this.$store.dispatch('addCart',product)
