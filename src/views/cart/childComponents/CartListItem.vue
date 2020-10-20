@@ -1,6 +1,5 @@
 <template>
   <div class="cart-list-item">
-      {{product}}
      <div class="item-selector">
          <check-button @checkBtnClick='checkedChange' :is-checked="product.checked"></check-button>
      </div>
@@ -37,6 +36,7 @@ export default {
     methods:{
         checkedChange(){
             this.product.checked=!this.product.checked
+            // console.log(this.product.checked)
         }
     }
 }
@@ -49,6 +49,12 @@ export default {
     font-size: 0;
     padding: 5px;
     border-bottom: 1px solid #ccc;
+}
+.item-selector{
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .item-img{
 padding: 5px;

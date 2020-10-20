@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div class="icon-selector" :class="{'selector-active': checked}" @click="selectItem">
+      <div class="icon-selector" :class="{'selector-active': isChecked}" @click="selectItem">
         <img src="~/assets/img/cart/tick.svg" alt="">
       </div>
     </div>
@@ -15,14 +15,10 @@
                 default: false
         }
         },
-        data() {
-            return {
-                checked: this.isChecked
-        }
-        },
         methods: {
             selectItem() {
-                this.$emit('checkBtnClick')
+              this.$emit('checkBtnClick')
+                
             }
         },
         watch: {

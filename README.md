@@ -93,17 +93,46 @@ div>a>img
 
 
   # 底部工具栏，点击加入购物车
-  1. 获取购物车页面需要展示的信息
+  1. 监听点击，获取购物车页面需要展示的信息
     - 子组件中发射事件
     - 父组件中监听事件
       - 将所需展示的信息封装到一个对象中
   2. 添加到购物车（vuex）
-    - 复杂逻辑及异步需写到actions中
-    - 通过dispatch()触发actions中的方法，然后在actions中的方法中通过commit()触发mutations中的方法，修改state中的数据
+    - 安装vuex
+    - 配置vuex
+    - 定义mutations，将商品添加到state.cartList中
+    - 重构代码：
+      - 将mutations中的代码抽取到actions中（复杂逻辑定义2个mutations）
+        - 通过dispatch()触发actions中的方法，然后在actions中的方法中通过commit()触发mutations中的方法，修改state中的数据
+      - 将mutations、actions单独抽取到文件中
 
 
 
 # 购物车页面
+1. 购物车导航栏的展示
+2. 购物车商品的展示
+   - CartList--->Scroll
+   - CartListItem--->CheckButton
+   - 商品的选中和不选中切换：
+     - 修改模型对象，改变选中和不选中
+3. 底部工具栏的封装
+    - 全选按钮
+      - 全选按钮的显示状态：
+        - 有一个不选中，全选按钮就是不选中
+      - 点击全选按钮：
+        - 如果原来都是选中，点击全选，全部不选中
+        - 如果原来都是不选中（某些不选中），点击全选，全部选中
+    - 计算总价格
+    - 去计算
+   
+
+
+   # 添加购物车弹框
+   1. actions可以返回一个promise
+   2. mapActions的映射
+   3. 以插件的形式封装toast组件
+   
+
 
    
 

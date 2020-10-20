@@ -189,7 +189,12 @@ import {itemListenerMixins,backTopMixins} from '../../common/mixins.js'
         product.price=this.newPrice
         product.iid=this.iid
         // 2.添加到购物车
-        this.$store.dispatch('addCart',product)
+        this.$store.dispatch('addCart',product).then(res=>{
+           // 3.添加到购物车成功
+          //  console.log(this.$toast)
+          this.$toast.show(res)
+        })
+       
       }
 	  }
   }
