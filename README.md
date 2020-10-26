@@ -133,6 +133,30 @@ div>a>img
    3. 以插件的形式封装toast组件
    
 
+   # ps
+  1. 减小移动端300ms的延迟：fastclick
+      - 安装
+      - 导入
+      - 调用attach()
+  2. 图片懒加载：vue-lazyload
+      - npm install vue-lazyload
+      - 导入
+      - Vue.use()
+      - src--->v-lazy
+
+
+##  项目部署（nginx（软件，提供服务的））
+### window
+1. 官网下载nginx--->解压--->输入localhost，显示welcome nginx，即安装成功
+2. 将打包好的文件夹放进去
+### linux（ubuntu（学习）   |   centos（更稳定） ）
+ - yum：linux系统下的安装包管理工具
+ - 通过ssh登录到远程服务器主机上 
+1. yum install nginx
+2. system 
+
+  
+
 
    
 
